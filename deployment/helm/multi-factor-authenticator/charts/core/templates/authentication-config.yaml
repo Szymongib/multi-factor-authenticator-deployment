@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  authentications.json: |
+    ""
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-authentication-config
+  namespace: {{ .Values.global.namespace }}

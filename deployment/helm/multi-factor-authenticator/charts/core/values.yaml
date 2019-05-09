@@ -1,0 +1,14 @@
+namespace: default
+
+core:
+  externalApiPort: 8080
+  reverseProxyPort: 8081
+  jwtExpiryTime: 10
+  jwtSecretKey: "secret" # TODO - should be moved to secret
+  authenticationsCacheExpiryTime: 10
+  authenticationConfigFile: "/authentications/config.json"
+
+image:
+  name: szymongib/user-service
+  tag: master
+  pullPolicy: IfNotPresent

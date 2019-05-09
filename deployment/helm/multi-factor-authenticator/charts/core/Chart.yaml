@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Core component of Multifactor Authenticator
+name: core
+version: 0.0.1

@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Multifactor Authenticator Helm chart.
+name: multi-factor-authenticator
+version: 0.0.1

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Chart.Name }}
+    release: {{ .Chart.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+        release: {{ .Chart.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "/userservice"
+            - "--externalApiPort={{ .Values.core.externalApiPort }}"
+            - "--reverseProxyPort={{ .Values.core.reverseProxyPort }}"
+            - "--jwtExpiryTime={{ .Values.core.jwtExpiryTime }}"
+            - "--jwtSecretKey={{ .Values.core.jwtSecretKey }}"
+            - "--authenticationsCacheExpiryTime={{ .Values.core.authenticationsCacheExpiryTime }}"
+            - "--authenticationConfigFile={{ .Values.core.authenticationConfigFile }}"
+          ports:
+            - containerPort: {{ .Values.core.externalApiPort }}
+              name: http-api-port
+            - containerPort: {{ .Values.core.reverseProxyPort }}
+              name: http-proxy-port
+          volumeMounts:
+            - mountPath: /authentication
+              name: authentication-config
+      volumes:
+        - name: authentication-config
+          configMap:
+            name: {{ .Chart.Name }}-authentication-config
+            items:
+              - key: authentications.json
+                path: config.json
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
