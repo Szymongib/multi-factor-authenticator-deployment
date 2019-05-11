@@ -37,7 +37,7 @@ spec:
             - containerPort: {{ .Values.core.reverseProxyPort }}
               name: http-proxy-port
           volumeMounts:
-            - mountPath: /authentication
+            - mountPath: /authentications
               name: authentication-config
       volumes:
         - name: authentication-config

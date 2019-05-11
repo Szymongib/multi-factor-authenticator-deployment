@@ -8,6 +8,12 @@ core:
   authenticationsCacheExpiryTime: 10
   authenticationConfigFile: "/authentications/config.json"
 
+authentication:
+  config:
+    {
+      "authenticationMethods": []
+    }
+
 image:
   name: szymongib/user-service
   tag: master
