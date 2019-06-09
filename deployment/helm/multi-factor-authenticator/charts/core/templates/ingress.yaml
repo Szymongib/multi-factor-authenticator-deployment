@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+spec:
+  rules:
+    - host: multifactor-authenticator.io
+      http:
+        paths:
+          - path: /v1/users
+            backend:
+              serviceName: {{ .Chart.Name }}-external-api
+              servicePort: {{ .Values.core.externalApiPort }}
+          - path: /v1/certificates
+            backend:
+              serviceName: {{ .Chart.Name }}-external-api
+              servicePort: {{ .Values.core.externalApiPort }}
+          - path: /v1/authentication/methods
+            backend:
+              serviceName: {{ .Chart.Name }}-external-api
+              servicePort: {{ .Values.core.externalApiSecuredPort}}
+          - path: /v1/authentication/*/authenticate
+            backend:
+              serviceName: {{ .Chart.Name }}-external-api
+              servicePort: {{ .Values.core.reverseProxyAuthenticationPort}}
+          - path: /v1/authentication/*/*
+            backend:
+              serviceName: {{ .Chart.Name }}-external-api
+              servicePort: {{ .Values.core.reverseProxySecuredPort }}
