@@ -33,10 +33,10 @@ spec:
             - "--jwtSecretKey={{ .Values.core.jwtSecretKey }}"
             - "--authenticationsCacheExpiryTime={{ .Values.core.authenticationsCacheExpiryTime }}"
             - "--authenticationConfigFile={{ .Values.core.authenticationConfigFile }}"
-            - "--tlsCertificatePath={{ .Values.secrets.tls.crt }}"
-            - "--tlsKeyPath={{ .Values.secrets.tls.key }}"
-            - "--caCertificatePath={{ .Values.secrets.ca.crt }}"
-            - "--caKeyPath={{ .Values.secrets.ca.key }}"
+            - "--tlsCertificatePath={{ .Values.core.tlsCertificatePath }}"
+            - "--tlsKeyPath={{ .Values.core.tlsKeyPath }}"
+            - "--caCertificatePath={{ .Values.core.caCertificatePath }}"
+            - "--caKeyPath={{ .Values.core.caKeyPath }}"
           ports:
             - containerPort: {{ .Values.core.externalApiPort }}
               name: http-api
@@ -63,19 +63,9 @@ spec:
         - name: tls-certs
           secret:
             secretName: {{ .Chart.Name }}-tls-certs
-            items:
-              - key: tls.crt
-                path: tls.cert
-              - key: tls.key
-                path: tls.key
         - name: ca-certs
           secret:
             secretName: {{ .Chart.Name }}-ca-certs
-            items:
-              - key: ca.crt
-                path: ca.cert
-              - key: ca.key
-                path: ca.key
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
