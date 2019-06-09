@@ -44,7 +44,7 @@ spec:
       serviceAccountName: tiller
       containers:
         - name: tiller
-          image: gcr.io/kubernetes-helm/tiller:v2.13.1
+          image: gcr.io/kubernetes-helm/tiller:v2.14.0
           imagePullPolicy: IfNotPresent
           env:
             - name: TILLER_NAMESPACE

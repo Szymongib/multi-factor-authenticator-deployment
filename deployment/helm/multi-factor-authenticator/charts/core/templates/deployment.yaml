@@ -26,19 +26,33 @@ spec:
           args:
             - "/userservice"
             - "--externalApiPort={{ .Values.core.externalApiPort }}"
-            - "--reverseProxyPort={{ .Values.core.reverseProxyPort }}"
+            - "--externalApiSecuredPort={{ .Values.core.externalApiSecuredPort }}"
+            - "--reverseProxyAuthenticationPort={{ .Values.core.reverseProxyAuthenticationPort }}"
+            - "--reverseProxySecuredPort={{ .Values.core.reverseProxySecuredPort }}"
             - "--jwtExpiryTime={{ .Values.core.jwtExpiryTime }}"
             - "--jwtSecretKey={{ .Values.core.jwtSecretKey }}"
             - "--authenticationsCacheExpiryTime={{ .Values.core.authenticationsCacheExpiryTime }}"
             - "--authenticationConfigFile={{ .Values.core.authenticationConfigFile }}"
+            - "--tlsCertificatePath={{ .Values.secrets.tls.crt }}"
+            - "--tlsKeyPath={{ .Values.secrets.tls.key }}"
+            - "--caCertificatePath={{ .Values.secrets.ca.crt }}"
+            - "--caKeyPath={{ .Values.secrets.ca.key }}"
           ports:
             - containerPort: {{ .Values.core.externalApiPort }}
-              name: http-api-port
-            - containerPort: {{ .Values.core.reverseProxyPort }}
-              name: http-proxy-port
+              name: http-api
+            - containerPort: {{ .Values.core.externalApiSecuredPort}}
+              name: http-mtls-api
+            - containerPort: {{ .Values.core.reverseProxyAuthenticationPort }}
+              name: http-proxy
+            - containerPort: {{ .Values.core.reverseProxySecuredPort }}
+              name: http-mtls-proxy
           volumeMounts:
             - mountPath: /authentications
               name: authentication-config
+            - mountPath: /etc/certs/tls
+              name: tls-certs
+            - mountPath: /etc/certs/ca
+              name: ca-certs
       volumes:
         - name: authentication-config
           configMap:
@@ -46,6 +60,22 @@ spec:
             items:
               - key: authentications.json
                 path: config.json
+        - name: tls-certs
+          secret:
+            secretName: {{ .Chart.Name }}-tls-certs
+            items:
+              - key: tls.crt
+                path: tls.cert
+              - key: tls.key
+                path: tls.key
+        - name: ca-certs
+          secret:
+            secretName: {{ .Chart.Name }}-ca-certs
+            items:
+              - key: ca.crt
+                path: ca.cert
+              - key: ca.key
+                path: ca.key
   selector:
     matchLabels:
       app: {{ .Chart.Name }}

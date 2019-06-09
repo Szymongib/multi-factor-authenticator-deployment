@@ -8,11 +8,30 @@ metadata:
     release: {{ .Chart.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.services.type }}
   ports:
     - port: {{ .Values.core.externalApiPort }}
       protocol: TCP
-      name: http-api-port
+      name: http-api
+  selector:
+    app: {{ .Chart.Name }}
+    release: {{ .Chart.Name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-secured-external-api
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}
+    release: {{ .Chart.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.services.type }}
+  ports:
+    - port: {{ .Values.core.externalApiSecuredPort }}
+      protocol: TCP
+      name: http-mtls-api
   selector:
     app: {{ .Chart.Name }}
     release: {{ .Chart.Name }}
@@ -27,11 +46,30 @@ metadata:
     release: {{ .Chart.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.services.type }}
   ports:
-    - port: {{ .Values.core.reverseProxyPort}}
+    - port: {{ .Values.core.reverseProxyAuthenticationPort }}
       protocol: TCP
-      name: http-proxy-port
+      name: http-proxy
+  selector:
+    app: {{ .Chart.Name }}
+    release: {{ .Chart.Name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-secured-reverse-proxy
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Chart.Name }}
+    release: {{ .Chart.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.services.type }}
+  ports:
+    - port: {{ .Values.core.reverseProxySecuredPort }}
+      protocol: TCP
+      name: http-mtls-proxy
   selector:
     app: {{ .Chart.Name }}
     release: {{ .Chart.Name }}
