@@ -1,0 +1,14 @@
+{
+  "authenticationMethods":[
+    {
+      "name": "Password",
+      "urls": {
+        "enableUrl": "http://password-authenticator:9000/v1/authentication/register",
+        "authenticateUrl": "http://password-authenticator:9000/v1/authentication/login",
+        "disableUrl": "http://password-authenticator:9000/v1/authentication/disable",
+        "infoUrl": "http://password-authenticator:9000/v1/authentication/info",
+        "tokenCheckUrl": "http://password-authenticator:9000/v1/authentication/token/verify"
+      }
+    }
+  ]
+}
