@@ -1,0 +1,22 @@
+version: "3"
+services:
+  user-service:
+    image: szymongib/user-service:master
+    # TODO - volume with config
+    ports:
+      - 8080:8080
+      - 8081:8081
+      - 8082:8082
+      - 8083:8083
+    command:
+      ./userservice --authenticationConfigFile ./config/config.json
+      --tlsCertificatePath ./config/certificates/tls.crt
+      --tlsKeyPath ./config/certificates/tls.key
+      --caCertificatePath ./config/certificates/ca.crt
+      --caKeyPath ./config/certificates/ca.key
+    volumes:
+      - ./user-service:/config
+
+  password-authenticator:
+    image: szymongib/password-authenticator:master
+    command: ./passwordauthenticator
