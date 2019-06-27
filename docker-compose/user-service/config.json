@@ -9,6 +9,16 @@
         "infoUrl": "http://password-authenticator:9000/v1/authentication/info",
         "tokenCheckUrl": "http://password-authenticator:9000/v1/authentication/token/verify"
       }
+    },
+    {
+      "name": "Gps",
+      "urls": {
+        "enableUrl": "http://gps-authenticator:9000/v1/authentication/register",
+        "authenticateUrl": "http://gps-authenticator:9000/v1/authentication/login",
+        "disableUrl": "http://gps-authenticator:9000/v1/authentication/disable",
+        "infoUrl": "http://gps-authenticator:9000/v1/authentication/info",
+        "tokenCheckUrl": "http://gps-authenticator:9000/v1/authentication/token/verify"
+      }
     }
   ]
 }

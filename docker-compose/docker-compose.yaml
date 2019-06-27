@@ -2,7 +2,6 @@ version: "3"
 services:
   user-service:
     image: szymongib/user-service:master
-    # TODO - volume with config
     ports:
       - 8080:8080
       - 8081:8081
@@ -19,4 +18,8 @@ services:
 
   password-authenticator:
     image: szymongib/password-authenticator:master
+    command: ./passwordauthenticator
+
+  gps-authenticator:
+    image: kfurgol/gps-auth:latest
     command: ./passwordauthenticator
