@@ -19,6 +19,16 @@
         "infoUrl": "http://gps-authenticator:9000/v1/authentication/info",
         "tokenCheckUrl": "http://gps-authenticator:9000/v1/authentication/token/verify"
       }
+    },
+    {
+      "name": "Pattern",
+      "urls": {
+        "enableUrl": "http://pattern-authenticator:9000/v1/authentication/register",
+        "authenticateUrl": "http://pattern-authenticator:9000/v1/authentication/login",
+        "disableUrl": "http://pattern-authenticator:9000/v1/authentication/disable",
+        "infoUrl": "http://pattern-authenticator:9000/v1/authentication/info",
+        "tokenCheckUrl": "http://pattern-authenticator:9000/v1/authentication/token/verify"
+      }
     }
   ]
 }

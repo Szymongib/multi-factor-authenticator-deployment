@@ -23,3 +23,7 @@ services:
   gps-authenticator:
     image: kfurgol/gps-auth:latest
     command: ./passwordauthenticator
+
+  pattern-authenticator:
+    image: kfurgol/pattern-auth:prod
+    command: ./passwordauthenticator
