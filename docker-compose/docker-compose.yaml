@@ -1,21 +1,26 @@
 version: "3"
 services:
-  user-service:
-    image: szymongib/user-service:master
-    # TODO - volume with config
+  multi-factor-authenticator:
+    image: szymongib/multi-factor-authenticator:master
     ports:
-      - 8080:8080
-      - 8081:8081
-      - 8082:8082
-      - 8083:8083
+      - 8000:8000
     command:
-      ./userservice --authenticationConfigFile ./config/config.json
-      --tlsCertificatePath ./config/certificates/tls.crt
-      --tlsKeyPath ./config/certificates/tls.key
-      --caCertificatePath ./config/certificates/ca.crt
-      --caKeyPath ./config/certificates/ca.key
+      ./core
     volumes:
-      - ./user-service:/config
+      - ./core:/config
+    environment:
+      - APP_EXTERNAL_API_PORT=8000
+      - APP_JWT_VALIDITY_TIME=10m
+      - APP_JWT_SECRET_KEY=secret
+      - APP_AUTHENTICATIONS_CACHE_VALIDITY_TIME=10m
+      - APP_AUTHENTICATION_CONFIG_FILE=./config/config.json
+      - APP_TLS_CERTIFICATE_PATH=./config/certificates/tls.crt
+      - APP_TLS_KEY_PATH=./config/certificates/tls.key
+      - APP_ID_TOKEN_RSA_PRIVATE_KEY_PATH=./config/idToken/key.pem
+      - APP_ID_TOKEN_VALIDITY_TIME=1h
+      - APP_CA_CERTIFICATE_PATH=./config/certificates/ca.crt
+      - APP_CA_KEY_PATH=./config/certificates/ca.key
+      - APP_CORS_ALLOW_ALL=true
 
   password-authenticator:
     image: szymongib/password-authenticator:master
