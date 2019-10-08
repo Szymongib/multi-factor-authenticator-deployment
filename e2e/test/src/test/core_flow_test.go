@@ -18,7 +18,10 @@ import (
 	"github.com/tidwall/pretty"
 )
 
-var ()
+type authRequestConfig struct {
+	authMethodName string
+	credentials    interface{}
+}
 
 func TestFullFlow(t *testing.T) {
 
@@ -38,22 +41,13 @@ func TestFullFlow(t *testing.T) {
 
 	// TODO - cleanup after test or generate random creds (best both)
 
-	fmt.Println("Logging in user...")
-	loginResponse, err := testSuite.CoreClient.LoginUser(userCreds.Email, userCreds.Password)
-	require.NoError(t, err)
-	printDataAsJSONOrFail(t, loginResponse)
-
-	fmt.Println("Generating Id Token...")
-	idTokenResponse, err := testSuite.CoreClient.GenerateIdToken(loginResponse.Token.Token, nil)
-	require.NoError(t, err)
-	printDataAsJSONOrFail(t, idTokenResponse)
+	_, idTokenResponse := generateIdToken(t, userCreds)
 
 	fmt.Println("Testing Authentication Methods...")
 
 	t.Run("Test Password authentication method", func(t *testing.T) {
 		securedClient := client.NewIdTokenSecuredAPIClient(config.MultiFactorAuthenticatorCoreURL, idTokenResponse.Token.Token, config.SkipTLSVerify)
 
-		// TODO - reuse Login logic ( move to func )
 		passwordCredentials := testSuite.GeneratePasswordAuthMethodCredentials()
 		fmt.Println("Password credentials: ")
 		_, err := spew.Println(userCreds)
@@ -64,12 +58,12 @@ func TestFullFlow(t *testing.T) {
 		require.NoError(t, err)
 		printDataAsJSONOrFail(t, tokenResponse)
 
-		fmt.Println("Logging in user...")
-		loginResponse, err := testSuite.CoreClient.LoginUser(userCreds.Email, userCreds.Password)
-		require.NoError(t, err)
-		printDataAsJSONOrFail(t, loginResponse)
-
 		t.Run("should fail to authenticate without Password auth method token", func(t *testing.T) {
+			fmt.Println("Logging in user...")
+			loginResponse, err := testSuite.CoreClient.LoginUser(userCreds.Email, userCreds.Password)
+			require.NoError(t, err)
+			printDataAsJSONOrFail(t, loginResponse)
+
 			fmt.Println("Trying to generate Id Token without required Password auth token...")
 			response, err := testSuite.CoreClient.GenerateIdTokenRaw(loginResponse.Token.Token, nil)
 			require.NoError(t, err)
@@ -79,23 +73,12 @@ func TestFullFlow(t *testing.T) {
 			fmt.Println("Failed response: ", string(responseBytes))
 		})
 
-		passwordAuthMethod, found := loginResponse.Authentications.AuthenticationMethods.GetAuthMethod(config.PasswordMethod.Name)
-		assert.True(t, found)
-		assert.True(t, passwordAuthMethod.Enabled)
-
-		passwordAuthToken, err := testSuite.CoreClient.LoginToAuthenticationService(t, config.PasswordMethod.Name, loginResponse.Token.Token, passwordCredentials)
-		require.NoError(t, err)
-		printDataAsJSONOrFail(t, passwordAuthToken)
-
-		tokens := contract.Tokens{
-			{
-				AuthenticationMethod: config.PasswordMethod.Name,
-				Token:                passwordAuthToken.Token,
-			},
-		}
-
 		fmt.Println("Generating Id Token...")
-		idTokenResponse, err := testSuite.CoreClient.GenerateIdToken(loginResponse.Token.Token, tokens)
+		passwordAuthRequestConfig := authRequestConfig{
+			authMethodName: config.PasswordMethod.Name,
+			credentials:    passwordCredentials,
+		}
+		_, idTokenResponse = generateIdToken(t, userCreds, passwordAuthRequestConfig)
 		require.NoError(t, err)
 		printDataAsJSONOrFail(t, idTokenResponse)
 
@@ -103,8 +86,34 @@ func TestFullFlow(t *testing.T) {
 		disabled, err := securedClient.DisableAuthenticationMethod(config.PasswordMethod.Name)
 		require.NoError(t, err)
 		printDataAsJSONOrFail(t, disabled)
-
 	})
+}
+
+func generateIdToken(t *testing.T, userCreds contract.UserCredentials, authConfigs ...authRequestConfig) (contract.LoginResponse, contract.IdTokenResponse) {
+	fmt.Println("Logging in user...")
+	loginResponse, err := testSuite.CoreClient.LoginUser(userCreds.Email, userCreds.Password)
+	require.NoError(t, err)
+	printDataAsJSONOrFail(t, loginResponse)
+
+	tokens := make(contract.Tokens, len(authConfigs))
+	for i, authCfg := range authConfigs {
+		fmt.Printf("Logging in to %s Authentication Method...\n", authCfg.authMethodName)
+		authTokenResponse, err := testSuite.CoreClient.LoginToAuthenticationService(t, authCfg.authMethodName, loginResponse.Token.Token, authCfg.credentials)
+		require.NoError(t, err)
+		printDataAsJSONOrFail(t, authTokenResponse)
+
+		tokens[i] = contract.Token{
+			AuthenticationMethod: authCfg.authMethodName,
+			Token:                authTokenResponse.Token,
+		}
+	}
+
+	fmt.Println("Generating Id Token...")
+	idTokenResponse, err := testSuite.CoreClient.GenerateIdToken(loginResponse.Token.Token, tokens)
+	require.NoError(t, err)
+	printDataAsJSONOrFail(t, idTokenResponse)
+
+	return loginResponse, idTokenResponse
 }
 
 func printDataAsJSONOrFail(t *testing.T, data interface{}) {
