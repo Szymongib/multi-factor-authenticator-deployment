@@ -6,19 +6,22 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 pushd ${CURRENT_DIR}/../docker-compose
 
-./run.sh &
+./run.sh &> ${CURRENT_DIR}/test.log &
 COMPOSE_PID=$!
 
-sleep 15
+trap "echo stoping; kill ${COMPOSE_PID}" EXIT
+
+sleep 10
 
 popd
 
 pushd ${CURRENT_DIR}/test
 
-go clean --testcache
+echo "Running tests..."
+GO11MODULE=on go test -v ./...
 
-go test -v ./...
+exit_code=$?
 
 popd
 
-kill ${COMPOSE_PID}
+exit ${exit_code}

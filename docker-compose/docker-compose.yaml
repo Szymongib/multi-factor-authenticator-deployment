@@ -21,7 +21,18 @@ services:
       - APP_CA_CERTIFICATE_PATH=./config/certificates/ca.crt
       - APP_CA_KEY_PATH=./config/certificates/ca.key
       - APP_CORS_ALLOW_ALL=true
+      - APP_DATABASE_USER=postgres
+      - APP_DATABASE_PASSWORD=password
+      - APP_DATABASE_HOST=core-database
+      - APP_DATABASE_PORT=5432
+      - APP_DATABASE_NAME=postgres
+      - APP_DATABASE_SSL_MODE=disable
+      - APP_DATABASE_SCHEMA_FILE_PATH=/assets/database/schema.sql
 
   password-authenticator:
     image: szymongib/password-authenticator:master
     command: ./passwordauthenticator
+
+  core-database:
+    image: postgres:12
+
