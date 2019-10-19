@@ -39,6 +39,13 @@ func TestFullFlow(t *testing.T) {
 	require.NoError(t, err)
 	printDataAsJSONOrFail(t, idResponse)
 
+	t.Run("should return 409 when email already in use", func(t *testing.T) {
+		response, err := testSuite.CoreClient.RegisterUserRaw(userCreds.Email, userCreds.Password)
+		require.NoError(t, err)
+		assert.Equal(t, http.StatusConflict, response.StatusCode)
+		dumpResponse(t, response)
+	})
+
 	// TODO - cleanup after test or generate random creds (best both)
 
 	_, idTokenResponse := generateIdToken(t, userCreds)
@@ -132,4 +139,10 @@ func printDataAsJSON(data interface{}) error {
 	fmt.Println(string(pretty.Color(prettyResponse, nil)))
 
 	return nil
+}
+
+func dumpResponse(t *testing.T, response *http.Response) {
+	bytes, err := httputil.DumpResponse(response, true)
+	require.NoError(t, err)
+	fmt.Println(string(bytes))
 }

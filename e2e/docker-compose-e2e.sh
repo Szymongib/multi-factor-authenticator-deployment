@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+echo "---------------WARNING---------------"
+echo "This script might not work correctly"
+echo "---------------WARNING---------------"
+
 set -e
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
