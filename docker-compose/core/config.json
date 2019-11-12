@@ -4,7 +4,9 @@
       "name": "Password",
       "urls": {
         "enableUrl": "http://password-authenticator:9000/v1/authentication/register",
+        "registrationFormUrl": "http://password-authenticator:9000/v1/web/authentication/register",
         "authenticateUrl": "http://password-authenticator:9000/v1/authentication/login",
+        "loginFormUrl": "http://password-authenticator:9000/v1/web/authentication/login",
         "disableUrl": "http://password-authenticator:9000/v1/authentication/disable",
         "infoUrl": "http://password-authenticator:9000/v1/authentication/info",
         "tokenCheckUrl": "http://password-authenticator:9000/v1/authentication/token/verify"
