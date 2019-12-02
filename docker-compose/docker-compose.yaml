@@ -33,6 +33,10 @@ services:
     image: szymongib/password-authenticator:forms-4
     command: ./passwordauthenticator
 
+  bank-password:
+    image: pjeziorowski/bankpassword:0.0.1
+    command: ./bankpassword
+
   core-database:
     image: postgres:12
 
