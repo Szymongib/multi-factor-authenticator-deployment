@@ -36,3 +36,13 @@ services:
   core-database:
     image: postgres:12
 
+  sample-app:
+    image: kfurgol/sample-app:latest
+    ports:
+      - 8001:8001
+    depends_on:
+      - multi-factor-authenticator
+    command: 
+      - /sampleapp
+    environment: 
+      - JWKS_URL=https://multi-factor-authenticator:8000/v1/jwks.json
