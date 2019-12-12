@@ -1,7 +1,7 @@
 version: "3"
 services:
   multi-factor-authenticator:
-    image: szymongib/multi-factor-authenticator:mod-response-0.0.6
+    image: szymongib/multi-factor-authenticator:master
     ports:
       - 8000:8000
     command:
@@ -30,7 +30,7 @@ services:
       - APP_DATABASE_SCHEMA_FILE_PATH=/assets/database/schema.sql
 
   password-authenticator:
-    image: szymongib/password-authenticator:forms-4
+    image: szymongib/password-authenticator:forms-0.2.0
     command: ./passwordauthenticator
 
   core-database:
