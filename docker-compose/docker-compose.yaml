@@ -33,9 +33,11 @@ services:
     image: szymongib/password-authenticator:forms-0.2.0
     command: ./passwordauthenticator
 
-  bank-password:
-    image: pjeziorowski/bankpassword:0.0.1
+  bankpassword:
+    image: pjeziorowski/bankpassword:0.0.2
     command: ./bankpassword
+    ports:
+      - 8080:8080
 
   core-database:
     image: postgres:12

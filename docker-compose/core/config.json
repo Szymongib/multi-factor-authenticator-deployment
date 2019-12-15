@@ -15,13 +15,13 @@
     {
       "name": "Bank Password",
       "urls": {
-        "enableUrl": "http://localhost:8080/v1/authentication/register",
-        "registrationFormUrl": "http://localhost:8080/v1/web/authentication/register",
-        "authenticateUrl": "http://localhost:8080/v1/authentication/login",
-        "loginFormUrl": "http://localhost:8080/v1/web/authentication/login",
-        "disableUrl": "http://localhost:8080/v1/authentication/disable",
-        "infoUrl": "http://localhost:8080/v1/authentication/info",
-        "tokenCheckUrl": "http://localhost:8080/v1/authentication/token/verify"
+        "enableUrl": "http://bankpassword:8080/v1/authentication/register",
+        "registrationFormUrl": "http://bankpassword:8080/v1/web/authentication/register",
+        "authenticateUrl": "http://bankpassword:8080/v1/authentication/login",
+        "loginFormUrl": "http://bankpassword:8080/v1/web/authentication/login",
+        "disableUrl": "http://bankpassword:8080/v1/authentication/disable",
+        "infoUrl": "http://bankpassword:8080/v1/authentication/info",
+        "tokenCheckUrl": "http://bankpassword:8080/v1/authentication/token/verify"
       }
     }
   ]
