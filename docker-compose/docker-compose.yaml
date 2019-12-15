@@ -34,7 +34,7 @@ services:
     command: ./passwordauthenticator
 
   bankpassword:
-    image: pjeziorowski/bankpassword:0.0.2
+    image: pjeziorowski/bankpassword:0.0.3
     command: ./bankpassword
     ports:
       - 8080:8080
