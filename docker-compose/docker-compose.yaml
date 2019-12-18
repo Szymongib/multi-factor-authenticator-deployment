@@ -1,5 +1,18 @@
 version: "3"
 services:
+  # TODO
+  nginx:
+    image: nginx:latest
+    volumes:
+#      - path/to/my/app:app
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+#      - path/to/site/conf:/etc/nginx/conf.d
+    depends_on:
+      - multi-factor-authenticator
+      - multi-factor-authenticator-web
+    ports:
+    - 80:80
+
   multi-factor-authenticator:
     image: szymongib/multi-factor-authenticator:master
     ports:
@@ -36,11 +49,18 @@ services:
   bankpassword:
     image: pjeziorowski/bankpassword:0.0.2
     command: ./bankpassword
-    ports:
-      - 8080:8080
 
   core-database:
     image: postgres:12
+
+  multi-factor-authenticator-web:
+    image: szymongib/multi-factor-authenticator-web:wip-0.3.2
+    ports:
+    - 8081:8081
+    depends_on:
+    - multi-factor-authenticator
+    environment:
+      - VUE_APP_SERVICE_URL=https://localhost:8000/core
 
   sample-app:
     image: kfurgol/sample-app:latest
