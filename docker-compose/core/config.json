@@ -2,6 +2,7 @@
   "authenticationMethods":[
     {
       "name": "Password",
+      "description": "Additional password",
       "urls": {
         "enableUrl": "http://password-authenticator:9000/v1/authentication/register",
         "registrationFormUrl": "http://password-authenticator:9000/v1/web/authentication/register",
@@ -14,6 +15,7 @@
     },
     {
       "name": "Bank Password",
+      "description": "Masked password similar to those in banks",
       "urls": {
         "enableUrl": "http://bankpassword:8080/v1/authentication/register",
         "registrationFormUrl": "http://bankpassword:8080/v1/web/authentication/register",

@@ -93,6 +93,32 @@ func TestFullFlow(t *testing.T) {
 		disabled, err := securedClient.DisableAuthenticationMethod(config.PasswordMethod.Name)
 		require.NoError(t, err)
 		printDataAsJSONOrFail(t, disabled)
+
+		fmt.Println("Assert descriptions present")
+		authMethods, err := securedClient.GetUserAuthenticationMethods()
+		require.NoError(t, err)
+		printDataAsJSONOrFail(t, authMethods)
+
+		for _, method := range authMethods.AuthenticationMethods {
+			assert.NotEmpty(t, method.Description)
+		}
+
+	})
+}
+
+func Test_Errors(t *testing.T) {
+
+	t.Run("should return 401 if user not found", func(t *testing.T) {
+		userCreds := testSuite.GenerateCredentials()
+		fmt.Println("Test credentials: ")
+		_, err := spew.Println(userCreds)
+		require.NoError(t, err)
+
+		fmt.Println("Logging in user...")
+		loginResponse, err := testSuite.CoreClient.LoginUserRaw(userCreds.Email, userCreds.Password)
+		require.NoError(t, err)
+
+		assert.Equal(t, http.StatusUnauthorized, loginResponse.StatusCode)
 	})
 }
 
