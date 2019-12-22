@@ -51,7 +51,7 @@ services:
     image: postgres:12
 
   multi-factor-authenticator-web:
-    image: szymongib/multi-factor-authenticator-web:wip-0.3.3
+    image: kfurgol/multi-factor-authenticator-web:latest
     ports:
     - 8081:8081
     depends_on:
@@ -60,7 +60,7 @@ services:
       - VUE_APP_SERVICE_URL=https://localhost:8000/core # currently not used (embedded inside Docker image)
 
   sample-app:
-    image: kfurgol/sample-app:latest
+    image: kfurgol/sample-app:rel-0.1.0
     ports:
       - 8001:8001
     depends_on:
