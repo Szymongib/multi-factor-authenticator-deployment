@@ -9,7 +9,7 @@ To verify everything went fine it add a single todo item at the end.
 
 To run tests Chrome driver is required to be installed in the `$PATH` as well as Python 3.6 being installed.
 
-Run tests with Python:
+To run the test, first run the MFA from docker-compose, then run tests with Python:
 ```
 python3 test.py
 ```  
